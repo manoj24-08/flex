@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold">Find Trusted Local Service Professionals</h1>
+                    <p class="lead">Connect with skilled workers in your area for all your home and business needs. From plumbing to electrical work, we've got you covered.</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="{{ url_for('workers') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-search me-2"></i>Find Workers
+                        </a>
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Join as Worker
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image text-center">
+                    <img src="https://pixabay.com/get/gde8beb11b54d674fee10676ce908948a7ecd3fc2e905b8b3e531015ec38773f31ed0304f72f52875c14fd31685dd7004754fdbc6829f98369d376a6d20a4a5d5_1280.jpg" 
+                         alt="Professional service workers" class="img-fluid rounded-3 shadow">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Our Services</h2>
+            <p class="lead text-muted">Professional services for all your needs</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card service-card h-100 text-center">
+                    <div class="card-body p-4">
+                        <div class="service-icon mb-3">
+                            <i class="{{ service.icon }}"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">{{ service.name }}</h5>
+                        <p class="card-text text-muted">{{ service.description }}</p>
+                        <a href="{{ url_for('workers', service=service.name) }}" class="btn btn-outline-primary">
+                            Find {{ service.name }} Workers
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Workers Section -->
+{% if featured_workers %}
+<section class="py-5 bg-dark bg-opacity-25">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Featured Workers</h2>
+            <p class="lead text-muted">Meet some of our top-rated professionals</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for worker in featured_workers %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card worker-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            {% if worker.profile_image %}
+                            <img src="{{ url_for('static', filename='uploads/' + worker.profile_image) }}" 
+                                 alt="{{ worker.name }}" class="worker-avatar me-3">
+                            {% else %}
+                            <div class="worker-avatar me-3 bg-primary d-flex align-items-center justify-content-center">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-1 fw-bold">{{ worker.name }}</h6>
+                                <span class="service-badge">{{ worker.service }}</span>
+                            </div>
+                        </div>
+                        
+                        <p class="text-muted mb-3">{{ worker.description[:100] }}...</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="rating-stars">
+                                {% for i in range(5) %}
+                                    {% if i < worker.rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="fw-bold text-primary">${{ worker.rate }}/hr</span>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <a href="{{ url_for('worker_profile', worker_id=worker.id) }}" class="btn btn-primary w-100">
+                                View Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{{ url_for('workers') }}" class="btn btn-outline-primary btn-lg">
+                View All Workers <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- How It Works Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">How It Works</h2>
+            <p class="lead text-muted">Simple steps to find the right professional</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="mb-4">
+                    <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-search fa-2x text-white"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold">1. Search & Filter</h5>
+                <p class="text-muted">Browse through our verified professionals and filter by service type, location, and availability.</p>
+            </div>
+            
+            <div class="col-md-4 text-center">
+                <div class="mb-4">
+                    <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-user-check fa-2x text-white"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold">2. Review Profiles</h5>
+                <p class="text-muted">Check ratings, reviews, and detailed profiles to find the perfect match for your needs.</p>
+            </div>
+            
+            <div class="col-md-4 text-center">
+                <div class="mb-4">
+                    <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-handshake fa-2x text-white"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold">3. Connect & Hire</h5>
+                <p class="text-muted">Contact the professional directly and arrange your service with confidence.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-dark bg-opacity-25">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">What Our Customers Say</h2>
+            <p class="lead text-muted">Real feedback from satisfied customers</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4">
+                <div class="card testimonial-card h-100">
+                    <div class="card-body p-4">
+                        <div class="rating-stars mb-3">
+                            {% for i in range(testimonial.rating) %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% endfor %}
+                        </div>
+                        
+                        <p class="mb-4">"{{ testimonial.comment }}"</p>
+                        
+                        <div class="d-flex align-items-center">
+                            <img src="{{ testimonial.image }}" alt="{{ testimonial.name }}" 
+                                 class="testimonial-avatar me-3">
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ testimonial.name }}</h6>
+                                <small class="text-muted">Verified Customer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-2">Ready to Get Started?</h3>
+                <p class="text-muted mb-0">Join thousands of satisfied customers and skilled professionals on our platform.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-flex gap-2 flex-wrap justify-content-lg-end">
+                    <a href="{{ url_for('workers') }}" class="btn btn-primary">Find Workers</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-primary">Join as Worker</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}{{ worker.name }} - ServiceConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{{ url_for('workers') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Workers
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Profile Column -->
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-body text-center p-4">
+                    <!-- Profile Image -->
+                    {% if worker.profile_image %}
+                    <img src="{{ url_for('static', filename='uploads/' + worker.profile_image) }}" 
+                         alt="{{ worker.name }}" class="rounded-circle mb-3" 
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 150px; height: 150px;">
+                        <i class="fas fa-user fa-4x text-white"></i>
+                    </div>
+                    {% endif %}
+
+                    <!-- Name and Service -->
+                    <h3 class="fw-bold mb-2">{{ worker.name }}</h3>
+                    <span class="service-badge fs-6 mb-3 d-inline-block">{{ worker.service }}</span>
+
+                    <!-- Rating -->
+                    <div class="rating-stars mb-3">
+                        {% for i in range(5) %}
+                            {% if i < worker.rating %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% else %}
+                                <i class="far fa-star text-muted"></i>
+                            {% endif %}
+                        {% endfor %}
+                        {% if worker.rating > 0 %}
+                            <span class="text-muted ms-1">({{ worker.rating }} rating)</span>
+                        {% else %}
+                            <span class="text-muted ms-1">(No ratings yet)</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Rate -->
+                    <div class="mb-4">
+                        <span class="fw-bold text-primary fs-3">${{ worker.rate }}</span>
+                        <span class="text-muted">/hour</span>
+                    </div>
+
+                    <!-- Contact Buttons -->
+                    <div class="d-grid gap-2">
+                        <a href="tel:{{ worker.phone }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-phone me-2"></i>Call Now
+                        </a>
+                        <a href="mailto:{{ worker.email }}" class="btn btn-outline-primary">
+                            <i class="fas fa-envelope me-2"></i>Send Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info Card -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-3">
+                        <i class="fas fa-info-circle me-2"></i>Quick Info
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <strong>Experience:</strong>
+                        <span class="text-muted">{{ worker.experience }} years</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Location:</strong>
+                        <span class="text-muted">{{ worker.location }}</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Availability:</strong>
+                        <span class="text-muted">{{ worker.availability }}</span>
+                    </div>
+                    
+                    <div class="mb-0">
+                        <strong>Member Since:</strong>
+                        <span class="text-muted">{{ worker.created_at[:10] }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Column -->
+        <div class="col-lg-8">
+            <!-- About Section -->
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">
+                        <i class="fas fa-user me-2"></i>About {{ worker.name }}
+                    </h5>
+                    <p class="text-muted">{{ worker.description }}</p>
+                </div>
+            </div>
+
+            <!-- Services Section -->
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">
+                        <i class="fas fa-briefcase me-2"></i>Services Offered
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>{{ worker.service }} Services</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>Professional Consultation</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>Quality Workmanship</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>Fair Pricing</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>Reliable Service</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <span>{{ worker.availability }} Availability</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">
+                        <i class="fas fa-address-card me-2"></i>Contact Information
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="contact-info">
+                                <h6><i class="fas fa-phone"></i> Phone</h6>
+                                <p><a href="tel:{{ worker.phone }}" class="text-decoration-none">{{ worker.phone }}</a></p>
+                                
+                                <h6><i class="fas fa-envelope"></i> Email</h6>
+                                <p><a href="mailto:{{ worker.email }}" class="text-decoration-none">{{ worker.email }}</a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="contact-info">
+                                <h6><i class="fas fa-map-marker-alt"></i> Service Area</h6>
+                                <p>{{ worker.location }}</p>
+                                
+                                <h6><i class="fas fa-clock"></i> Availability</h6>
+                                <p>{{ worker.availability }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="card">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">
+                        <i class="fas fa-star me-2"></i>Reviews & Ratings
+                    </h5>
+                    
+                    {% if worker.reviews %}
+                    <div class="reviews-list">
+                        {% for review in worker.reviews %}
+                        <div class="review-item mb-3 p-3 border rounded">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1">{{ review.customer_name }}</h6>
+                                    <div class="rating-stars">
+                                        {% for i in range(5) %}
+                                            {% if i < review.rating %}
+                                                <i class="fas fa-star text-warning"></i>
+                                            {% else %}
+                                                <i class="far fa-star text-muted"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <small class="text-muted">{{ review.date }}</small>
+                            </div>
+                            <p class="text-muted mb-0">{{ review.comment }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-star fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted">No Reviews Yet</h6>
+                        <p class="text-muted">Be the first to hire {{ worker.name }} and leave a review!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <h3 class="fw-bold mb-3">Ready to hire {{ worker.name }}?</h3>
+            <p class="text-muted mb-4">Contact them directly to discuss your project and get started.</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="tel:{{ worker.phone }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-phone me-2"></i>Call {{ worker.phone }}
+                </a>
+                <a href="mailto:{{ worker.email }}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Send Email
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

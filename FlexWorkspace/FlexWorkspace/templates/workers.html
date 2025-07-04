@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Find Workers - ServiceConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold">Find Service Professionals</h2>
+        <p class="lead text-muted">Browse through our verified workers and find the perfect match for your needs</p>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="search-filters mb-5">
+        <form method="GET" id="search-form" class="row g-3">
+            <div class="col-md-4">
+                <label for="search" class="form-label">
+                    <i class="fas fa-search me-2"></i>Search Workers
+                </label>
+                <input type="text" class="form-control" id="search" name="search" 
+                       value="{{ current_search }}" placeholder="Search by name or description...">
+            </div>
+            
+            <div class="col-md-3">
+                <label for="service" class="form-label">
+                    <i class="fas fa-briefcase me-2"></i>Service Type
+                </label>
+                <select class="form-select" id="service" name="service">
+                    <option value="">All Services</option>
+                    {% for service in services %}
+                        <option value="{{ service }}" {% if service == current_service %}selected{% endif %}>
+                            {{ service }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <label for="location" class="form-label">
+                    <i class="fas fa-map-marker-alt me-2"></i>Location
+                </label>
+                <select class="form-select" id="location" name="location">
+                    <option value="">All Locations</option>
+                    {% for location in locations %}
+                        <option value="{{ location }}" {% if location == current_location %}selected{% endif %}>
+                            {{ location }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i>Search
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="clear-search">
+                        <i class="fas fa-times me-2"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="mb-0">
+            {% if workers %}
+                {{ workers|length }} Worker{{ 's' if workers|length != 1 else '' }} Found
+            {% else %}
+                No Workers Found
+            {% endif %}
+        </h5>
+        
+        {% if current_search or current_service or current_location %}
+        <div class="d-flex gap-2 flex-wrap">
+            {% if current_search %}
+                <span class="badge bg-primary">Search: "{{ current_search }}"</span>
+            {% endif %}
+            {% if current_service %}
+                <span class="badge bg-primary">Service: {{ current_service }}</span>
+            {% endif %}
+            {% if current_location %}
+                <span class="badge bg-primary">Location: {{ current_location }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Workers Grid -->
+    {% if workers %}
+    <div class="row g-4">
+        {% for worker in workers %}
+        <div class="col-lg-6 col-xl-4">
+            <div class="card worker-card h-100">
+                <div class="card-body p-4">
+                    <!-- Worker Header -->
+                    <div class="d-flex align-items-center mb-3">
+                        {% if worker.profile_image %}
+                        <img src="{{ url_for('static', filename='uploads/' + worker.profile_image) }}" 
+                             alt="{{ worker.name }}" class="worker-avatar me-3">
+                        {% else %}
+                        <div class="worker-avatar me-3 bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        {% endif %}
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1 fw-bold">{{ worker.name }}</h6>
+                            <span class="service-badge">{{ worker.service }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Worker Details -->
+                    <div class="mb-3">
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-map-marker-alt me-2"></i>{{ worker.location }}
+                        </p>
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-clock me-2"></i>{{ worker.experience }} years experience
+                        </p>
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-calendar me-2"></i>{{ worker.availability }}
+                        </p>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-muted mb-3">
+                        {{ worker.description[:100] }}{% if worker.description|length > 100 %}...{% endif %}
+                    </p>
+
+                    <!-- Rating and Rate -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="rating-stars">
+                            {% for i in range(5) %}
+                                {% if i < worker.rating %}
+                                    <i class="fas fa-star text-warning"></i>
+                                {% else %}
+                                    <i class="far fa-star text-muted"></i>
+                                {% endif %}
+                            {% endfor %}
+                            {% if worker.rating > 0 %}
+                                <span class="text-muted ms-1">({{ worker.rating }})</span>
+                            {% endif %}
+                        </div>
+                        <span class="fw-bold text-primary fs-5">${{ worker.rate }}/hr</span>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="mb-3">
+                        <p class="text-muted mb-1">
+                            <i class="fas fa-envelope me-2"></i>{{ worker.email }}
+                        </p>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-phone me-2"></i>{{ worker.phone }}
+                        </p>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('worker_profile', worker_id=worker.id) }}" 
+                           class="btn btn-primary">
+                            <i class="fas fa-eye me-2"></i>View Profile
+                        </a>
+                        <a href="tel:{{ worker.phone }}" class="btn btn-outline-primary">
+                            <i class="fas fa-phone me-2"></i>Call Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <h4>No Workers Found</h4>
+        <p>Try adjusting your search criteria or browse all workers.</p>
+        <a href="{{ url_for('workers') }}" class="btn btn-primary">
+            <i class="fas fa-refresh me-2"></i>View All Workers
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Call to Action -->
+<div class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <h3 class="fw-bold mb-2">Are you a service professional?</h3>
+            <p class="text-muted mb-0">Join our network and start connecting with customers today.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-user-plus me-2"></i>Join as Worker
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit form when filters change
+    const serviceSelect = document.getElementById('service');
+    const locationSelect = document.getElementById('location');
+    
+    if (serviceSelect) {
+        serviceSelect.addEventListener('change', function() {
+            document.getElementById('search-form').submit();
+        });
+    }
+    
+    if (locationSelect) {
+        locationSelect.addEventListener('change', function() {
+            document.getElementById('search-form').submit();
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Worker Registration - ServiceConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="form-section">
+                <div class="text-center mb-5">
+                    <h2 class="display-5 fw-bold">Join Our Network</h2>
+                    <p class="lead text-muted">Create your professional profile and start connecting with customers</p>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" id="registration-form" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row g-4">
+                        <!-- Personal Information -->
+                        <div class="col-12">
+                            <h5 class="fw-bold mb-3">
+                                <i class="fas fa-user me-2"></i>Personal Information
+                            </h5>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.name.id }}" class="form-label">{{ form.name.label.text }}</label>
+                            {{ form.name(class="form-control") }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.name.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.email.id }}" class="form-label">{{ form.email.label.text }}</label>
+                            {{ form.email(class="form-control") }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.email.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.phone.id }}" class="form-label">{{ form.phone.label.text }}</label>
+                            {{ form.phone(class="form-control") }}
+                            {% if form.phone.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.phone.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.location.id }}" class="form-label">{{ form.location.label.text }}</label>
+                            {{ form.location(class="form-control") }}
+                            {% if form.location.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.location.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Service Information -->
+                        <div class="col-12 mt-5">
+                            <h5 class="fw-bold mb-3">
+                                <i class="fas fa-briefcase me-2"></i>Service Information
+                            </h5>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.service.id }}" class="form-label">{{ form.service.label.text }}</label>
+                            {{ form.service(class="form-select") }}
+                            {% if form.service.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.service.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.experience.id }}" class="form-label">{{ form.experience.label.text }}</label>
+                            {{ form.experience(class="form-control") }}
+                            {% if form.experience.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.experience.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.rate.id }}" class="form-label">{{ form.rate.label.text }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                {{ form.rate(class="form-control") }}
+                                <span class="input-group-text">per hour</span>
+                            </div>
+                            {% if form.rate.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.rate.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.availability.id }}" class="form-label">{{ form.availability.label.text }}</label>
+                            {{ form.availability(class="form-select") }}
+                            {% if form.availability.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.availability.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="{{ form.description.id }}" class="form-label">{{ form.description.label.text }}</label>
+                            {{ form.description(class="form-control", rows="4", placeholder="Describe your services, specialties, and what makes you unique...") }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.description.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Profile Image -->
+                        <div class="col-12 mt-5">
+                            <h5 class="fw-bold mb-3">
+                                <i class="fas fa-camera me-2"></i>Profile Image
+                            </h5>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="{{ form.profile_image.id }}" class="form-label">{{ form.profile_image.label.text }}</label>
+                            {{ form.profile_image(class="form-control") }}
+                            <div class="form-text">Upload a professional profile photo (optional). Supported formats: JPG, PNG, GIF. Max size: 16MB.</div>
+                            {% if form.profile_image.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.profile_image.errors %}
+                                        <div>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col-12 mt-5">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-user-plus me-2"></i>Create Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Info Section -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="text-center mb-4">
+                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 60px; height: 60px;">
+                    <i class="fas fa-shield-alt text-white"></i>
+                </div>
+                <h5 class="fw-bold">Verified Profiles</h5>
+                <p class="text-muted">All worker profiles are verified for authenticity and quality.</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="text-center mb-4">
+                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 60px; height: 60px;">
+                    <i class="fas fa-users text-white"></i>
+                </div>
+                <h5 class="fw-bold">Direct Connection</h5>
+                <p class="text-muted">Connect directly with customers without middlemen or commission fees.</p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="text-center mb-4">
+                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 60px; height: 60px;">
+                    <i class="fas fa-chart-line text-white"></i>
+                </div>
+                <h5 class="fw-bold">Grow Your Business</h5>
+                <p class="text-muted">Expand your customer base and grow your service business.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
